@@ -1,12 +1,12 @@
 import React from "react";
 import "./App.css";
-import { Search } from "./components/Search/Search";
+// import { Search } from "./components/Search/Search";
 import MainTable from "./components/MainTable/MainTable";
 
 function App() {
   return (
     <div className="App">
-      <Search />
+      {/* <Search /> */}
       <MainTable />
     </div>
   );

@@ -1,48 +1,43 @@
 import React, { useState, useEffect } from "react";
 import { MainTableWrapper } from "../../shared/UI/Styled";
-
-const baseUrl = "https://jsonplaceholder.typicode.com/posts";
+import { TableData } from "../TableData/TableData";
 
 export default function MainTable() {
-  const [elemInfo, setElemInfo] = useState([]);
-  useEffect(() => {
-    fetch(baseUrl)
-      .then((response) => response.json())
-      .then((data) => setElemInfo(data));
-    console.log(elemInfo);
-  }, []);
+  const [searchString, setSearchString] = useState(" ");
 
-  const tableData = elemInfo.map((element: any) => {
-    return (
-      <tr>
-        <td>{element.id}</td>
-        <td>{element.title}</td>
-        <td>{element.body}</td>
-        </tr>
-    );
-  });
+  let inputHandler = (e: any) => {
+    setSearchString(e.target.value);
+  };
 
   return (
-    <MainTableWrapper>
-      <table>
-        <thead>
-          <tr>
-            <th>
-              ID <button>SORT</button>
-            </th>
-            <th>
-              Заголовок <button>SORT</button>
-            </th>
-            <th>
-              Описание <button>SORT</button>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {tableData}
-
-        </tbody>
-      </table>
-    </MainTableWrapper>
+    <>
+      <label htmlFor="names">Поиск персонажей</label>
+      <br />
+      <input
+        id="names"
+        type="text"
+        placeholder="Поиск"
+        onChange={inputHandler}
+        value={searchString}
+      />
+      <MainTableWrapper>
+        <table>
+          <thead>
+            <tr>
+              <th>
+                ID <button>SORT</button>
+              </th>
+              <th>
+                Заголовок <button>SORT</button>
+              </th>
+              <th>
+                Описание <button>SORT</button>
+              </th>
+            </tr>
+          </thead>
+          <TableData input={searchString}/>
+        </table>
+      </MainTableWrapper>
+    </>
   );
 }
