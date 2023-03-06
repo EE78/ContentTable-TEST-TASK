@@ -1,7 +1,7 @@
 {
   "name": "test-table",
   "version": "0.1.0",
-  "homepage": "https://ee78.github.io/Test_table-with-content/",
+  "homepage": "https://ee78.github.io/ContentTable-TEST-TASK/",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.10.6",

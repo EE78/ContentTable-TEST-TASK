@@ -1,4 +1,8 @@
-li {
+table {
+    width: 100%;
+}
+
+.list-buttons {
     list-style: none;
     margin-left: 20px;
     margin-right: 20px;
@@ -6,18 +10,19 @@ li {
     font-style: italic;
     font-weight: 700;
     font-size: 18px;
-
+    border: none;
+    background: none;
 }
 
-ul {
-    display: flex;
+.list-buttons:hover{
+    opacity: 0.75;
 }
 
 .controllers {
     display: flex;
     align-items: center;
     justify-content: space-between;
-
+margin-top: 15px;
 }
 
 .change-page__button {
@@ -26,7 +31,13 @@ ul {
     color: #474955;
     border: none;
     background: none;
+    cursor: pointer;
 }
+
+.change-page__button:hover{
+    opacity: 0.75;
+}
+
 
 th {
     background: #474955;
@@ -44,5 +55,4 @@ td {
     font-weight: 500;
     font-size: 13px;
    padding: 15px; color: #474955;
-
 }
