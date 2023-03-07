@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { TableData } from "../TableData/TableData";
+import { PostsData } from "../PostsData/PostsData";
 import "./MainTable.styles.css";
 
 export const MainTable = () => {
   const [searchString, setSearchString] = useState("");
 
-  const inputHandler = (e: any) => {
-    setSearchString(e.target.value);
+  const inputHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchString((event.target as HTMLInputElement).value);
   };
 
   return (
@@ -17,7 +17,7 @@ export const MainTable = () => {
         onChange={inputHandler}
         value={searchString}
       />
-      <TableData input={searchString} />
+      <PostsData searchString={searchString} />
     </>
   );
 };

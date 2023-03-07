@@ -1,0 +1,19 @@
+.table-head_id-header {
+    background: #474955;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    text-align: center;
+    padding: 19px;
+    width: 10%;
+}
+
+.table-head_other-header {
+    background: #474955;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    text-align: center;
+    padding: 19px;
+    width: 45%;
+}
