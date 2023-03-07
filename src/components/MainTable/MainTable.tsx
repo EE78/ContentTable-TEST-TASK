@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { TableData } from "../TableData/TableData";
-import "./styles.css";
+import "./MainTable.styles.css";
 
-export default function MainTable() {
+export const MainTable = () => {
   const [searchString, setSearchString] = useState("");
 
-  let inputHandler = (e: any) => {
+  const inputHandler = (e: any) => {
     setSearchString(e.target.value);
   };
 
@@ -20,4 +20,4 @@ export default function MainTable() {
       <TableData input={searchString} />
     </>
   );
-}
+};

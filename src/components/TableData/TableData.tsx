@@ -1,26 +1,13 @@
-import React, { useState, useEffect } from "react";
-import "./styles.css";
+import { useState, useEffect } from "react";
+import "./TableData.styles.css";
 
 const baseUrl = "https://jsonplaceholder.typicode.com/posts";
 
-const TableData = (props: any) => {
+export const TableData = (props: any) => {
   const [elemInfo, setElemInfo] = useState([]);
-  const filteredData = elemInfo.filter((el: any) => {
-    if (props.input === "") {
-      return el;
-    } else {
-      return el.title.includes(props.input);
-    }
-  });
-
-  useEffect(() => {
-    fetch(baseUrl)
-      .then((res) => res.json())
-      .then((result) => setElemInfo(result));
-  }, []);
-
   const [initPage, setInitPage] = useState(0);
   const [endPage, setEndPage] = useState(10);
+
   const showNextInfo = () => {
     setInitPage(initPage + 10);
     setEndPage(endPage + 10);
@@ -37,11 +24,19 @@ const TableData = (props: any) => {
       setEndPage(10);
     }
   };
+  const filteredData = elemInfo.filter((el: any) => {
+    if (props.input === "") {
+      return el;
+    } else {
+      return el.title.includes(props.input);
+    }
+  });
 
   const arrOfPageButtons = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const pageButtons = arrOfPageButtons.map((button: any) => {
     return (
-      <button className="list-buttons"
+      <button
+        className="list-buttons"
         onClick={() => {
           if (button === 1) {
             setInitPage(0);
@@ -90,12 +85,7 @@ const TableData = (props: any) => {
       </button>
     );
   });
-  // const arrOfId = elemInfo.map((item: any) => {
-  //   return item.id;
-  // });
-  // const sortId = () => {
-  //   arrOfId.sort((a, b) => b - a);
-  // };
+
   const tableData = filteredData
     .slice(initPage, endPage)
     .map((element: any) => {
@@ -108,24 +98,32 @@ const TableData = (props: any) => {
       );
     });
 
+  useEffect(() => {
+    fetch(baseUrl)
+      .then((res) => res.json())
+      .then((result) => setElemInfo(result));
+  }, []);
+
   return (
     <div>
       <table>
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Заголовок</th>
-            <th>Описание</th>
+            <th className="table-head_id-header">ID</th>
+            <th className="table-head_other-header">Заголовок</th>
+            <th className="table-head_other-header">Описание</th>
           </tr>
         </thead>
-        <tbody>{tableData}</tbody>
+        <tbody>
+          {filteredData.length !== 0 ? tableData : <h1>NO DATA</h1>}
+        </tbody>
       </table>
       <div className="controllers">
         <button className="change-page__button" onClick={showPrevInfo}>
           Назад
         </button>
 
-        <div>{pageButtons}</div>
+        <div>{filteredData.length !== 0 ? pageButtons : null}</div>
 
         <button className="change-page__button" onClick={showNextInfo}>
           Далее
@@ -134,5 +132,3 @@ const TableData = (props: any) => {
     </div>
   );
 };
-
-export { TableData };
