@@ -11,6 +11,10 @@ export const PostsData: React.FC<IProps> = (props) => {
   const { posts } = usePosts();
   const [startIndex, setStartIndex] = useState(0);
   const [finalIndex, setFinalIndex] = useState(10);
+  // const [idSort, setIdSort] = useState(false);
+  // const handleIdSort = () => {
+  //   setIdSort(true);
+  // };
 
   const showNextInfo = () => {
     setStartIndex(startIndex + 10);
@@ -35,6 +39,7 @@ export const PostsData: React.FC<IProps> = (props) => {
       return el.title.includes(props.searchString);
     }
   });
+
   const tableData = filteredData.slice(startIndex, finalIndex);
   const postsElements = tableData.map((element) => {
     return (
@@ -46,11 +51,25 @@ export const PostsData: React.FC<IProps> = (props) => {
     );
   });
 
+  // const descendingId = posts.sort((prev, next) => next.id - prev.id);
+  // console.log(descendingId);
+
+  // const sortedById = descendingId.map((post) => {
+  //   return post.id;
+  // });
+  // const ascendingId = posts.sort((prev, next) => prev.id - next.id);
+  // console.log(ascendingId);
+  // const alphabetSort = posts.sort((prev, next) => {
+  //   if (prev.title < next.title) return -1;
+  //   if (prev.title < next.title) return 1;
+  // });
+
   const pagesCount = Math.round(posts.length / POSTS_PER_PAGE);
   const arrOfPageButtons = new Array(pagesCount).fill(0);
   const pagination = arrOfPageButtons.map((button, index) => {
     return (
       <button
+        key={index}
         className="list-buttons"
         onClick={() => {
           setStartIndex((index + 1) * 10 - 10);
@@ -67,7 +86,13 @@ export const PostsData: React.FC<IProps> = (props) => {
       <table>
         <TableHead />
         <tbody>
-          {filteredData.length !== 0 ? postsElements : <h1>NO DATA</h1>}
+          {filteredData.length !== 0 ? (
+            postsElements
+          ) : (
+            <tr>
+              <td>NO DATA</td>
+            </tr>
+          )}
         </tbody>
       </table>
       <Pagination
