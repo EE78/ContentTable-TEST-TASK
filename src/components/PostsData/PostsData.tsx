@@ -11,10 +11,10 @@ export const PostsData: React.FC<IProps> = (props) => {
   const { posts } = usePosts();
   const [startIndex, setStartIndex] = useState(0);
   const [finalIndex, setFinalIndex] = useState(10);
-  // const [idSort, setIdSort] = useState(false);
-  // const handleIdSort = () => {
-  //   setIdSort(true);
-  // };
+  const [idSort, setIdSort] = useState(false);
+  const handleIdSort = () => {
+    setIdSort((prevState) => !prevState);
+  };
 
   const showNextInfo = () => {
     setStartIndex(startIndex + 10);
@@ -50,19 +50,7 @@ export const PostsData: React.FC<IProps> = (props) => {
       </tr>
     );
   });
-
-  // const descendingId = posts.sort((prev, next) => next.id - prev.id);
-  // console.log(descendingId);
-
-  // const sortedById = descendingId.map((post) => {
-  //   return post.id;
-  // });
-  // const ascendingId = posts.sort((prev, next) => prev.id - next.id);
-  // console.log(ascendingId);
-  // const alphabetSort = posts.sort((prev, next) => {
-  //   if (prev.title < next.title) return -1;
-  //   if (prev.title < next.title) return 1;
-  // });
+  if (idSort) postsElements.reverse();
 
   const pagesCount = Math.round(posts.length / POSTS_PER_PAGE);
   const arrOfPageButtons = new Array(pagesCount).fill(0);
@@ -83,23 +71,22 @@ export const PostsData: React.FC<IProps> = (props) => {
 
   return (
     <div>
-      <table>
-        <TableHead />
-        <tbody>
-          {filteredData.length !== 0 ? (
-            postsElements
-          ) : (
-            <tr>
-              <td>NO DATA</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-      <Pagination
-        onNextClick={showNextInfo}
-        onPrevClick={showPrevInfo}
-        content={filteredData.length !== 0 ? pagination : null}
-      />
+      {filteredData.length !== 0 ? (
+        <table>
+          <TableHead onClick={handleIdSort} />
+          <tbody>{postsElements}</tbody>
+        </table>
+      ) : (
+        <h1>NO DATA</h1>
+      )}
+
+      {filteredData.length !== 0 ? (
+        <Pagination
+          onNextClick={showNextInfo}
+          onPrevClick={showPrevInfo}
+          content={pagination}
+        />
+      ) : null}
     </div>
   );
 };

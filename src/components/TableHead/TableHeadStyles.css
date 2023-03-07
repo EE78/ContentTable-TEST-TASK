@@ -5,7 +5,18 @@
     font-size: 14px;
     text-align: center;
     padding: 19px;
-    width: 10%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.table-head_id-header img {
+    width: 15%;
+    cursor: pointer;
+}
+
+.table-head_id-header img:hover {
+    opacity: 0.75
 }
 
 .table-head_other-header {
