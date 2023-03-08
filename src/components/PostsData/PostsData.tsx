@@ -4,32 +4,33 @@ import { usePosts } from "./model/usePosts";
 import IProps from "./interfaces/IProps";
 import { Pagination } from "../Pagination/Pagination";
 import { TableHead } from "../TableHead/TableHead";
+import { PostContent } from "../PostContent/PostContent";
 
 const POSTS_PER_PAGE = 10;
 
 export const PostsData: React.FC<IProps> = (props) => {
   const { posts } = usePosts();
-  const [startIndex, setStartIndex] = useState(0);
-  const [finalIndex, setFinalIndex] = useState(10);
+  const [startPageIndex, setStartPageIndex] = useState(0);
+  const [finalPageIndex, setFinalPageIndex] = useState(10);
   const [descIdSort, setDescIdSort] = useState(false);
   const handleSort = () => {
     setDescIdSort((prevState) => !prevState);
   };
 
   const showNextInfo = () => {
-    setStartIndex(startIndex + 10);
-    setFinalIndex(finalIndex + 10);
-    if (startIndex > 80 && finalIndex > 99) {
-      setStartIndex(90);
-      setFinalIndex(100);
+    setStartPageIndex(startPageIndex + 10);
+    setFinalPageIndex(finalPageIndex + 10);
+    if (startPageIndex > 80 && finalPageIndex > 99) {
+      setStartPageIndex(90);
+      setFinalPageIndex(100);
     }
   };
   const showPrevInfo = () => {
-    setStartIndex(startIndex - 10);
-    setFinalIndex(finalIndex - 10);
-    if (startIndex < 10 && finalIndex < 20) {
-      setStartIndex(0);
-      setFinalIndex(10);
+    setStartPageIndex(startPageIndex - 10);
+    setFinalPageIndex(finalPageIndex - 10);
+    if (startPageIndex < 10 && finalPageIndex < 20) {
+      setStartPageIndex(0);
+      setFinalPageIndex(10);
     }
   };
   const filteredData = posts.filter((el) => {
@@ -40,7 +41,7 @@ export const PostsData: React.FC<IProps> = (props) => {
     }
   });
 
-  const tableData = filteredData.slice(startIndex, finalIndex);
+  const tableData = filteredData.slice(startPageIndex, finalPageIndex);
   const sortedData = tableData.sort((next, prev) => {
     if (descIdSort) {
       return prev.id - next.id;
@@ -49,11 +50,12 @@ export const PostsData: React.FC<IProps> = (props) => {
   });
   const postsElements = sortedData.map((element) => {
     return (
-      <tr key={element.id}>
-        <td>{element.id}</td>
-        <td>{element.title}</td>
-        <td>{element.body}</td>
-      </tr>
+      <PostContent
+        key={element.id}
+        postId={element.id}
+        postTitle={element.title}
+        postBody={element.body}
+      />
     );
   });
 
@@ -65,8 +67,8 @@ export const PostsData: React.FC<IProps> = (props) => {
         key={index}
         className="list-buttons"
         onClick={() => {
-          setStartIndex((index + 1) * 10 - 10);
-          setFinalIndex((index + 1) * 10);
+          setStartPageIndex((index + 1) * 10 - 10);
+          setFinalPageIndex((index + 1) * 10);
         }}
       >
         {index + 1}
