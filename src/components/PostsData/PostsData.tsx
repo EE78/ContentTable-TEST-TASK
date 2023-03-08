@@ -41,7 +41,14 @@ export const PostsData: React.FC<IProps> = (props) => {
   });
 
   const tableData = filteredData.slice(startIndex, finalIndex);
-  const postsElements = tableData.map((element) => {
+  // @ts-ignore
+  const sortedData = tableData.sort((next, prev) => {
+    if (idSort) {
+      return prev.id - next.id;
+    }
+    return next.id - prev.id;
+  });
+  const postsElements = sortedData.map((element) => {
     return (
       <tr key={element.id}>
         <td>{element.id}</td>
@@ -50,7 +57,6 @@ export const PostsData: React.FC<IProps> = (props) => {
       </tr>
     );
   });
-  if (idSort) postsElements.reverse();
 
   const pagesCount = Math.round(posts.length / POSTS_PER_PAGE);
   const arrOfPageButtons = new Array(pagesCount).fill(0);

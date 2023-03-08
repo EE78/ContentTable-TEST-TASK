@@ -1,4 +1,3 @@
-import React from "react";
 import "./PaginationStyles.css";
 
 export const Pagination = ({ onNextClick, onPrevClick, content }: any) => {
