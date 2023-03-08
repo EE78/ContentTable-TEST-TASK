@@ -11,9 +11,9 @@ export const PostsData: React.FC<IProps> = (props) => {
   const { posts } = usePosts();
   const [startIndex, setStartIndex] = useState(0);
   const [finalIndex, setFinalIndex] = useState(10);
-  const [idSort, setIdSort] = useState(false);
-  const handleIdSort = () => {
-    setIdSort((prevState) => !prevState);
+  const [descIdSort, setDescIdSort] = useState(false);
+  const handleSort = () => {
+    setDescIdSort((prevState) => !prevState);
   };
 
   const showNextInfo = () => {
@@ -41,9 +41,8 @@ export const PostsData: React.FC<IProps> = (props) => {
   });
 
   const tableData = filteredData.slice(startIndex, finalIndex);
-  // @ts-ignore
   const sortedData = tableData.sort((next, prev) => {
-    if (idSort) {
+    if (descIdSort) {
       return prev.id - next.id;
     }
     return next.id - prev.id;
@@ -79,7 +78,7 @@ export const PostsData: React.FC<IProps> = (props) => {
     <div>
       {filteredData.length !== 0 ? (
         <table>
-          <TableHead onClick={handleIdSort} />
+          <TableHead onClick={handleSort} />
           <tbody>{postsElements}</tbody>
         </table>
       ) : (
