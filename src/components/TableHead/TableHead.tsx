@@ -2,16 +2,20 @@ import "./TableHeadStyles.css";
 // @ts-ignore
 import sortArrow from "./images/sortArrow.png";
 
-export const TableHead = ({ onClick }: any) => {
+export const TableHead = ({ onIdClick, onTitleClick, onBodyClick }: any) => {
   return (
     <thead>
       <tr>
-        <th className="table-head_id-header">
+        <th onClick={onIdClick} className="table-head_id-header">
           ID
-          <img src={sortArrow} onClick={onClick} alt="sort by id"></img>
+          <img src={sortArrow} alt="sort by id"></img>
         </th>
-        <th className="table-head_other-header">Заголовок</th>
-        <th className="table-head_other-header">Описание</th>
+        <th onClick={onTitleClick} className="table-head_other-header">
+          Заголовок
+        </th>
+        <th onClick={onBodyClick} className="table-head_other-header">
+          Описание
+        </th>
       </tr>
     </thead>
   );

@@ -1,22 +1,30 @@
 import { useState } from "react";
 import "./PostsDataStyles.css";
 import { usePosts } from "./model/usePosts";
-import IProps from "./interfaces/IProps";
 import { Pagination } from "../Pagination/Pagination";
 import { TableHead } from "../TableHead/TableHead";
 import { PostContent } from "../PostContent/PostContent";
+import { Search } from "../Search/Search";
 
 const POSTS_PER_PAGE = 10;
 
-export const PostsData: React.FC<IProps> = (props) => {
+export const PostsData = () => {
   const { posts } = usePosts();
   const [startPageIndex, setStartPageIndex] = useState(0);
   const [finalPageIndex, setFinalPageIndex] = useState(10);
   const [descIdSort, setDescIdSort] = useState(false);
-  const handleSort = () => {
+  const handleIdSort = () => {
     setDescIdSort((prevState) => !prevState);
   };
-
+  const [titleSort, setTitleSort] = useState(false);
+  const handleTextSort = () => {
+    setTitleSort((prevState) => !prevState);
+  };
+  const [bodySort, setBodySort] = useState(false);
+  const handleBodySort = () => {
+    setBodySort((prevState) => !prevState);
+  };
+  const [searchValue, setSearchValue] = useState("");
   const showNextInfo = () => {
     setStartPageIndex(startPageIndex + 10);
     setFinalPageIndex(finalPageIndex + 10);
@@ -33,33 +41,46 @@ export const PostsData: React.FC<IProps> = (props) => {
       setFinalPageIndex(10);
     }
   };
-  const filteredData = posts.filter((el) => {
-    if (props.searchString === "") {
-      return el;
-    } else {
-      return el.title.includes(props.searchString);
-    }
+
+  const searchHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue((event.target as HTMLInputElement).value);
+  };
+  const filteredData = posts.filter((post) => {
+    return post.title.toLowerCase().includes(searchValue.toLowerCase());
   });
 
-  const tableData = filteredData.slice(startPageIndex, finalPageIndex);
-  const sortedData = tableData.sort((next, prev) => {
+  const sortedData = filteredData.sort((next, prev) => {
+    if (titleSort) {
+      if (next.title.toLowerCase() < prev.title.toLowerCase()) {
+        return -1;
+      }
+      return 1;
+    }
+    if (bodySort) {
+      if (next.body.toLowerCase() < prev.body.toLowerCase()) {
+        return -1;
+      }
+      return 1;
+    }
     if (descIdSort) {
       return prev.id - next.id;
     }
     return next.id - prev.id;
   });
-  const postsElements = sortedData.map((element) => {
+  const tableData = sortedData.slice(startPageIndex, finalPageIndex);
+
+  const postsData = tableData.map((post) => {
     return (
       <PostContent
-        key={element.id}
-        postId={element.id}
-        postTitle={element.title}
-        postBody={element.body}
+        key={post.id}
+        postId={post.id}
+        postTitle={post.title}
+        postBody={post.body}
       />
     );
   });
 
-  const pagesCount = Math.round(posts.length / POSTS_PER_PAGE);
+  const pagesCount = Math.ceil(filteredData.length / POSTS_PER_PAGE);
   const arrOfPageButtons = new Array(pagesCount).fill(0);
   const pagination = arrOfPageButtons.map((button, index) => {
     return (
@@ -75,19 +96,25 @@ export const PostsData: React.FC<IProps> = (props) => {
       </button>
     );
   });
+  console.log(filteredData.length);
 
   return (
     <div>
+      <Search onChange={searchHandler} />
       {filteredData.length !== 0 ? (
         <table>
-          <TableHead onClick={handleSort} />
-          <tbody>{postsElements}</tbody>
+          <TableHead
+            onIdClick={handleIdSort}
+            onTitleClick={handleTextSort}
+            onBodyClick={handleBodySort}
+          />
+          <tbody>{postsData}</tbody>
         </table>
       ) : (
         <h1>NO DATA</h1>
       )}
 
-      {filteredData.length !== 0 ? (
+      {filteredData.length > 10 ? (
         <Pagination
           onNextClick={showNextInfo}
           onPrevClick={showPrevInfo}

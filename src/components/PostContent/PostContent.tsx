@@ -1,6 +1,6 @@
-export const PostContent = ({ key, postId, postTitle, postBody }: any) => {
+export const PostContent = ({ postId, postTitle, postBody }: any) => {
   return (
-    <tr key={key}>
+    <tr>
       <td>{postId}</td>
       <td>{postTitle}</td>
       <td>{postBody}</td>

@@ -1,11 +1,11 @@
 import React from "react";
 import "./App.css";
-import { MainTable } from "../components/MainTable/MainTable";
+import { PostsData } from "../components/PostsData/PostsData";
 
 function App() {
   return (
     <div className="App">
-      <MainTable />
+      <PostsData />
     </div>
   );
 }
