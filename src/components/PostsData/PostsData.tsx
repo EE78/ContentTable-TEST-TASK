@@ -28,6 +28,11 @@ export const PostsData = () => {
   const showNextInfo = () => {
     setStartPageIndex(startPageIndex + 10);
     setFinalPageIndex(finalPageIndex + 10);
+
+    setLocation("page=" + (startPageIndex / 10 + 2));
+    if (startPageIndex / 10 + 2 >= 11) {
+      setLocation("page=10");
+    }
     if (startPageIndex > 80 && finalPageIndex > 99) {
       setStartPageIndex(90);
       setFinalPageIndex(100);
@@ -36,6 +41,10 @@ export const PostsData = () => {
   const showPrevInfo = () => {
     setStartPageIndex(startPageIndex - 10);
     setFinalPageIndex(finalPageIndex - 10);
+    setLocation("page=" + startPageIndex / 10);
+    if (startPageIndex / 10 === 0) {
+      setLocation("page=1");
+    }
     if (startPageIndex < 10 && finalPageIndex < 20) {
       setStartPageIndex(0);
       setFinalPageIndex(10);
@@ -80,6 +89,15 @@ export const PostsData = () => {
     );
   });
 
+  const setLocation = (currentLocation: any) => {
+    try {
+      //@ts-ignore
+      window.history.pushState(null, null, currentLocation);
+      return;
+    } catch (e) {}
+    window.location.hash = "#" + currentLocation;
+  };
+
   const pagesCount = Math.ceil(filteredData.length / POSTS_PER_PAGE);
   const arrOfPageButtons = new Array(pagesCount).fill(0);
   const pagination = arrOfPageButtons.map((button, index) => {
@@ -90,13 +108,13 @@ export const PostsData = () => {
         onClick={() => {
           setStartPageIndex((index + 1) * 10 - 10);
           setFinalPageIndex((index + 1) * 10);
+          setLocation("/page=" + (index + 1));
         }}
       >
         {index + 1}
       </button>
     );
   });
-  console.log(filteredData.length);
 
   return (
     <div>
