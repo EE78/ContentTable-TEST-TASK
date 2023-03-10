@@ -55,6 +55,9 @@ export const PostsData = () => {
     setSearchValue((event.target as HTMLInputElement).value);
   };
   const filteredData = posts.filter((post) => {
+    if (post.body.toLowerCase().includes(searchValue.toLowerCase())) {
+      return post.body.toLowerCase().includes(searchValue.toLowerCase());
+    }
     return post.title.toLowerCase().includes(searchValue.toLowerCase());
   });
 
