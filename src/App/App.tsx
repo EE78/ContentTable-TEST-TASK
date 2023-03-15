@@ -1,11 +1,11 @@
 import React from "react";
 import "./App.css";
-import { PostsData2 } from "../components/PostsData/PostsData2";
+import { PostsData } from "../components/PostsData/PostsData";
 
 function App() {
   return (
     <div className="App">
-      <PostsData2 />
+      <PostsData />
     </div>
   );
 }

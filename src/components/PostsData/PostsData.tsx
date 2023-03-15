@@ -1,16 +1,12 @@
 import { useEffect, useState } from "react";
 import { Search } from "../Search/Search";
+import { usePosts } from "./model/usePosts";
 import { Pagination } from "../Pagination/Pagination";
 import { TableHead } from "../TableHead/TableHead";
 import { PostContent } from "../PostContent/PostContent";
 import "./PostsDataStyles.css";
 
 const POSTS_PER_PAGE = 10;
-const url = "https://jsonplaceholder.typicode.com/posts";
-const fetchPosts = async (url: any) => {
-  const res = await fetch(url);
-  return await res.json();
-};
 const setLocation = (curLoc: any) => {
   try {
     //@ts-ignore
@@ -21,11 +17,9 @@ const setLocation = (curLoc: any) => {
 };
 const applyFilters = (postsToFilter: any, filterOptions: any) => {
   const filteredPosts = [...postsToFilter]
-    //@ts-ignore
     .sort((next, prev) => {
       return filterOptions.idSort ? prev.id - next.id : next.id - prev.id;
     })
-    //@ts-ignore
     .sort((next, prev) => {
       if (filterOptions.titleSort) {
         if (next.title.toLowerCase() < prev.title.toLowerCase()) {
@@ -39,7 +33,7 @@ const applyFilters = (postsToFilter: any, filterOptions: any) => {
       }
       return 1;
     })
-    .filter((post: any) => {
+    .filter((post) => {
       return (
         post.body.includes(filterOptions.searchString) ||
         post.title.includes(filterOptions.searchString)
@@ -48,13 +42,13 @@ const applyFilters = (postsToFilter: any, filterOptions: any) => {
   return filteredPosts;
 };
 
-export const PostsData2 = () => {
+export const PostsData = () => {
+  const { posts } = usePosts();
   const [searchValue, setSearchValue] = useState("");
   const [activePage, setActivePage] = useState(1);
   const [isIdSorted, setIsIdSorted] = useState(false);
   const [isBodySorted, setIsBodySorted] = useState(false);
   const [isTitleSorted, setIsTitleSorted] = useState(false);
-  const [posts, setPosts] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
   const topSliceBorder = activePage * POSTS_PER_PAGE;
   const bottomSliceBorder = activePage * POSTS_PER_PAGE - 10;
@@ -88,6 +82,15 @@ export const PostsData2 = () => {
     }
   };
   const pagesCount = Math.ceil(filteredPosts.length / POSTS_PER_PAGE);
+  if(activePage>pagesCount){
+    setActivePage(1);
+    setLocation("/page=" + 1)
+  }
+  // if (searchValue==="") {
+  //   setActivePage(1);
+  //   setLocation("/page=" + 1);
+  // }
+  console.log(pagesCount, activePage);
   const arrOfPageButtons = new Array(pagesCount).fill(0);
   const pagination = arrOfPageButtons.map((button, index) => {
     return (
@@ -95,10 +98,9 @@ export const PostsData2 = () => {
         key={index}
         className="list-buttons"
         style={{
-          border: activePage === index + 1 ? "2px solid green" : "none",
+          border: activePage === index + 1 ? "3px solid green" : "none",
         }}
         onClick={() => {
-          //@ts-ignore
           setActivePage(index + 1);
           setLocation("/page=" + (index + 1));
         }}
@@ -107,9 +109,6 @@ export const PostsData2 = () => {
       </button>
     );
   });
-  useEffect(() => {
-    fetchPosts(url).then((data) => setPosts(data));
-  }, []);
   useEffect(() => {
     const options = {
       searchString: searchValue,
@@ -137,19 +136,26 @@ export const PostsData2 = () => {
   return (
     <div>
       <Search onChange={searchHandler} />
-      <table>
-        <TableHead
-          onIdClick={idSortHandler}
-          onBodyClick={bodySortHandler}
-          onTitleClick={titleSortHandler}
+      {filteredPosts.length === 0 ? (
+        <h1>NO DATA</h1>
+      ) : (
+        <table>
+          <TableHead
+            onIdClick={idSortHandler}
+            onBodyClick={bodySortHandler}
+            onTitleClick={titleSortHandler}
+          />
+
+          <tbody>{postsData}</tbody>
+        </table>
+      )}
+      {filteredPosts.length > 10 ? (
+        <Pagination
+          content={pagination}
+          onNextClick={showNextPage}
+          onPrevClick={showPrevPage}
         />
-        <tbody>{postsData}</tbody>
-      </table>
-      <Pagination
-        content={pagination}
-        onNextClick={showNextPage}
-        onPrevClick={showPrevPage}
-      />
+      ) : null}
     </div>
   );
 };
