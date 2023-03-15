@@ -71,7 +71,22 @@ export const PostsData2 = () => {
   const titleSortHandler = () => {
     setIsTitleSorted((prevState) => !prevState);
   };
-
+  const showNextPage = () => {
+    setActivePage(activePage + 1);
+    setLocation("/page=" + (activePage + 1));
+    if (activePage === pagesCount) {
+      setActivePage(Math.max(pagesCount));
+      setLocation("/page=" + Math.max(pagesCount));
+    }
+  };
+  const showPrevPage = () => {
+    setActivePage(activePage - 1);
+    setLocation("/page=" + (activePage - 1));
+    if (activePage === 1) {
+      setActivePage(1);
+      setLocation("/page=1");
+    }
+  };
   const pagesCount = Math.ceil(filteredPosts.length / POSTS_PER_PAGE);
   const arrOfPageButtons = new Array(pagesCount).fill(0);
   const pagination = arrOfPageButtons.map((button, index) => {
@@ -79,6 +94,9 @@ export const PostsData2 = () => {
       <button
         key={index}
         className="list-buttons"
+        style={{
+          border: activePage === index + 1 ? "2px solid green" : "none",
+        }}
         onClick={() => {
           //@ts-ignore
           setActivePage(index + 1);
@@ -127,7 +145,11 @@ export const PostsData2 = () => {
         />
         <tbody>{postsData}</tbody>
       </table>
-      <Pagination content={pagination} />
+      <Pagination
+        content={pagination}
+        onNextClick={showNextPage}
+        onPrevClick={showPrevPage}
+      />
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import "./PaginationStyles.css";
 
-export const Pagination = ({ onNextClick, onPrevClick, content }: any) => {
+export const Pagination = ({ onNextClick, onPrevClick, content, setNextUrl }: any) => {
   return (
     <div className="controllers">
       <button className="controllers__button" onClick={onPrevClick}>
