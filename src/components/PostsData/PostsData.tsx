@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./PostsDataStyles.css";
 import { usePosts } from "./model/usePosts";
 import { Pagination } from "../Pagination/Pagination";
@@ -16,20 +16,19 @@ export const PostsData = () => {
   const handleIdSort = () => {
     setDescIdSort((prevState) => !prevState);
   };
-  const [titleSort, setTitleSort] = useState(false);
-  const handleTextSort = () => {
-    setTitleSort((prevState) => !prevState);
-  };
-  const [bodySort, setBodySort] = useState(false);
-  const handleBodySort = () => {
-    setBodySort((prevState) => !prevState);
-  };
+  // const [titleSort, setTitleSort] = useState(false);
+  // const handleTextSort = () => {
+  //   setTitleSort((prevState) => !prevState);
+  // };
+  // const [bodySort, setBodySort] = useState(false);
+  // const handleBodySort = () => {
+  //   setBodySort((prevState) => !prevState);
+  // };
   const [searchValue, setSearchValue] = useState("");
   const showNextInfo = () => {
     setStartPageIndex(startPageIndex + 10);
     setFinalPageIndex(finalPageIndex + 10);
-
-    setLocation("page=" + (startPageIndex / 10 + 2));
+    setLocation("page=" + (finalPageIndex / 10 + 1));
     if (startPageIndex / 10 + 2 >= 11) {
       setLocation("page=10");
     }
@@ -62,34 +61,22 @@ export const PostsData = () => {
   });
 
   const sortedData = filteredData.sort((next, prev) => {
-    if (titleSort) {
-      if (next.title.toLowerCase() < prev.title.toLowerCase()) {
-        return -1;
-      }
-      return 1;
-    }
-    if (bodySort) {
-      if (next.body.toLowerCase() < prev.body.toLowerCase()) {
-        return -1;
-      }
-      return 1;
-    }
+    // if (titleSort) {
+    //   if (next.title.toLowerCase() < prev.title.toLowerCase()) {
+    //     return -1;
+    //   }
+    //   return 1;
+    // }
+    // if (bodySort) {
+    //   if (next.body.toLowerCase() < prev.body.toLowerCase()) {
+    //     return -1;
+    //   }
+    //   return 1;
+    // }
     if (descIdSort) {
       return prev.id - next.id;
     }
     return next.id - prev.id;
-  });
-  const tableData = sortedData.slice(startPageIndex, finalPageIndex);
-
-  const postsData = tableData.map((post) => {
-    return (
-      <PostContent
-        key={post.id}
-        postId={post.id}
-        postTitle={post.title}
-        postBody={post.body}
-      />
-    );
   });
 
   const setLocation = (currentLocation: any) => {
@@ -109,6 +96,8 @@ export const PostsData = () => {
         key={index}
         className="list-buttons"
         onClick={() => {
+          //@ts-ignore
+          setActivePage(index + 1);
           setStartPageIndex((index + 1) * 10 - 10);
           setFinalPageIndex((index + 1) * 10);
           setLocation("/page=" + (index + 1));
@@ -119,15 +108,62 @@ export const PostsData = () => {
     );
   });
 
+  const tableData = sortedData.slice(startPageIndex, finalPageIndex);
+
+  const postsData = tableData.map((post) => {
+    return (
+      <PostContent
+        key={post.id}
+        postId={post.id}
+        postTitle={post.title}
+        postBody={post.body}
+      />
+    );
+  });
+
+  const [activePage, setActivePage] = useState();
+  const [isSorted, setIsSorted] = useState(false);
+
+  const options = {
+    searchString: searchValue,
+    page: activePage,
+    sort: isSorted,
+  };
+  const applyFilters = (postsToFilter: any, filterOptions: any) => {
+    const filteredPosts = [...postsToFilter]
+      //@ts-ignore
+      .sort((next, prev) => {
+        if (filterOptions.sort) {
+          return prev.id - next.id;
+        }
+      })
+      .filter((post: any) => {
+        return (
+          post.body.includes(filterOptions.searchString) ||
+          post.title.includes(filterOptions.searchString)
+        );
+      })
+      .slice(
+        filterOptions.page * POSTS_PER_PAGE - 10,
+        filterOptions.page * POSTS_PER_PAGE
+      );
+    // console.log(filteredPosts);
+    return filteredPosts;
+  };
+  console.log(applyFilters(posts, options));
+
   return (
     <div>
       <Search onChange={searchHandler} />
       {filteredData.length !== 0 ? (
         <table>
           <TableHead
-            onIdClick={handleIdSort}
-            onTitleClick={handleTextSort}
-            onBodyClick={handleBodySort}
+            onIdClick={() => {
+              setIsSorted((prevState) => !prevState);
+            }}
+            // onIdClick={handleIdSort}
+            // onTitleClick={handleTextSort}
+            // onBodyClick={handleBodySort}
           />
           <tbody>{postsData}</tbody>
         </table>
@@ -137,8 +173,8 @@ export const PostsData = () => {
 
       {filteredData.length > 10 ? (
         <Pagination
-          onNextClick={showNextInfo}
-          onPrevClick={showPrevInfo}
+          // onNextClick={showNextInfo}
+          // onPrevClick={showPrevInfo}
           content={pagination}
         />
       ) : null}
