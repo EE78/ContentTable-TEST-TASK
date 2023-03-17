@@ -82,15 +82,6 @@ export const PostsData = () => {
     }
   };
   const pagesCount = Math.ceil(filteredPosts.length / POSTS_PER_PAGE);
-  if(activePage>pagesCount){
-    setActivePage(1);
-    setLocation("/page=" + 1)
-  }
-  // if (searchValue==="") {
-  //   setActivePage(1);
-  //   setLocation("/page=" + 1);
-  // }
-  console.log(pagesCount, activePage);
   const arrOfPageButtons = new Array(pagesCount).fill(0);
   const pagination = arrOfPageButtons.map((button, index) => {
     return (
